@@ -1,0 +1,20 @@
+@echo off
+cls
+
+:: Prompt the user to confirm
+echo Extract WiFi passwords?
+set /p confirm=Proceed? (y/n): 
+
+if /i "%confirm%" neq "y" exit /b
+
+:: Extract WiFi passwords
+echo Extracting WiFi passwords...
+for /f "skip=9 tokens=1,2 delims=:" %%i in ('netsh wlan show profiles') do (
+    echo.
+    echo SSID: %%j
+    netsh wlan show profiles %%j key=clear | findstr /C:"SSID name" /C:"Key Content"
+)
+
+echo.
+echo Done!
+pause
